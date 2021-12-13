@@ -1,20 +1,35 @@
 package ua.edu.ucu.collections.immutable;
 
-import java.util.Arrays;
-import java.util.Objects;
-
-public final class ImmutableArrayList implements ImmutableList {
-    private Object[] array;
+public final class ImmutableLinkedList implements ImmutableList {
     private int size;
+    private Node head;
+    private Node tail;
 
-    public ImmutableArrayList(Object[] elements) {
-        this.array = elements.clone();
-        this.size = elements.length;
+    public ImmutableLinkedList(Object[] elements) {
+        this();
+        this.head = new Node();
+        this.head.setValue(elements[0]);
+        this.tail = new Node();
+        this.tail.setValue(elements[elements.length - 1]);
+
+        Node elem = this.head;
+        Node prev = new Node();
+        Node next = new Node();
+
+        size = elements.length;
+        for(int i = 0; i < elements.length; i++) {
+            next.setValue(elements[i]);
+            next.setPrevious(elem);
+            elem.setNext(next);
+            elem = next;
+        }
+
     }
 
-    public ImmutableArrayList() {
-        this.array = new Object[0];
+    public ImmutableLinkedList() {
         this.size = 0;
+        this.head = null;
+        this.tail = null;
     }
 
     @Override
@@ -36,43 +51,58 @@ public final class ImmutableArrayList implements ImmutableList {
     @Override
     public ImmutableList addAll(int index, Object[] c) {
         Object[] curr = this.toArray();
-        for (int i = 0; i < c.length; i++) {
-            curr[curr.length + c.length - 1 - i] = curr[curr.length - 1 - i];
+        Object[] newArr = new Object[curr.length + c.length ];
+        for(int i = 0; i < curr.length; i++){
+            if(i < index) {
+                newArr[i] = curr[i];
+            }
+            else {
+                newArr[i + index] = curr[i];
+            }
         }
-        for(int i = index; i < c.length + index; i++){
-            curr[i] = c[i - index];
+        for(int i = index; i < index + c.length; i++){
+            newArr[i] = c[i - index];
         }
-        return new ImmutableArrayList(curr);
+        return new ImmutableLinkedList(newArr);
     }
 
     @Override
     public Object get(int index) {
-
-        return this.array[index];
+        Node temp = this.head;
+        for (int i = 0; i < index; i++){
+            temp = temp.getNext();
+        }
+        return temp.getValue();
     }
 
     @Override
     public ImmutableList remove(int index) {
         Object[] curr = this.toArray();
-        for (int i = index; i < this.size - 1; i++){
-            curr[i] = curr[i + 1];
-            curr[this.size - 1] = null;
+        Object[] res = new Object[this.size - 1];
+        int counter = 0;
+        for (int i = 0; i < this.size; i++){
+            if (i != index){
+                res[counter] = curr[i];
+                counter++;
+            }
         }
-        return new ImmutableArrayList(curr);
+        this.size--;
+        return new ImmutableLinkedList(curr);
     }
 
     @Override
     public ImmutableList set(int index, Object e) {
-        Object[] res = this.toArray();
-        res[index] = e;
-
-        return new ImmutableArrayList(res);
+        Object[] curr = this.toArray();
+        curr[index] = e;
+        return new ImmutableLinkedList(curr);
     }
 
     @Override
     public int indexOf(Object e) {
         int index = 0;
-        while (this.array[index] != e) {
+        Node temp = this.head;
+        while (temp.value != e) {
+            temp = temp.getNext();
             index++;
         }
         return index;
@@ -85,12 +115,12 @@ public final class ImmutableArrayList implements ImmutableList {
 
     @Override
     public ImmutableList clear() {
-        return new ImmutableArrayList();
+        return new ImmutableLinkedList();
     }
 
     @Override
     public boolean isEmpty() {
-        if(this.size == 0){
+        if (this.size == 0) {
             return true;
         }
         return false;
@@ -98,10 +128,49 @@ public final class ImmutableArrayList implements ImmutableList {
 
     @Override
     public Object[] toArray() {
-        Object[] res = new Object[this.size];
-        for (int i = 0; i < this.size; i++) {
-            res[i] = this.array[i];
+        Object[] arr = new Object[size];
+        Node temp = head;
+        int counter = 0;
+        for(int i = 0; i < size; i++){
+            arr[i] = temp.getValue();
+            temp = temp.getNext();
         }
-        return res;
+        return arr;
+    }
+
+    public ImmutableLinkedList addFirst(Object e) {
+        ImmutableList res = add(0, e);
+        return new ImmutableLinkedList(res.toArray());
+    }
+
+    public ImmutableLinkedList addLast(Object e) {
+        ImmutableList res = add(e);
+        return new ImmutableLinkedList(res.toArray());
+    }
+
+    public Node getHead() {
+        return this.head;
+    }
+
+    public Node getTail() {
+        return this.tail;
+    }
+
+    public Object getFirst() {
+        return this.head.value;
+    }
+
+    public Object getLast() {
+        return this.tail.value;
+    }
+
+    public ImmutableLinkedList removeFirst() {
+        ImmutableList res = remove(0);
+        return new ImmutableLinkedList(res.toArray());
+    }
+
+    public ImmutableLinkedList removeLast() {
+        ImmutableList res = remove(this.size - 1);
+        return new ImmutableLinkedList(res.toArray());
     }
 }
