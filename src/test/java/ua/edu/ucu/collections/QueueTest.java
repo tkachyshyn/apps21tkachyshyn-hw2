@@ -22,9 +22,9 @@ public class QueueTest {
         assertEquals(3, queue.dequeue());
     }
 
-    @Test
-    public void dequeue() {
-        assertEquals(1, queue.peek());
-    }
+//    @Test
+//    public void dequeue() {
+//        assertEquals(1, queue.peek());
+//    }
 
 }
