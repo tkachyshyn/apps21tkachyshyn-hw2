@@ -1,103 +1,110 @@
 package ua.edu.ucu.collections.immutable;
 
-public final class ImmutableLinkedList implements ImmutableList {
-    public ImmutableLinkedList(Object[] elements) {
+
+import org.junit.Assert;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class ImmutableLinkedListTest {
+    ImmutableLinkedList lst = new ImmutableLinkedList();
+    Object[] arr = new Object[4];
+
+    @org.junit.jupiter.api.BeforeEach
+    void setUp() {
+        Object[] arr = {1, 1, 1, 1};
+        lst = new ImmutableLinkedList(arr);
+    }
+
+
+    @org.junit.jupiter.api.Test
+    void testAdd() {
+        Object e = 1;
+        Object[] arr1 = {1, 1, 1, 1, 1};
+        ImmutableList res = lst.add(e);
+        assertArrayEquals(res.toArray(), arr1);
 
     }
 
-    public ImmutableLinkedList() {
-
+    @org.junit.jupiter.api.Test
+    void testAddAll() {
+        Object[] e = {1, 1};
+        Object[] arr1 = {1, 1, 1, 1, 1, 1};
+        ImmutableList res = lst.addAll(e);
+        assertArrayEquals(res.toArray(), arr1);
     }
 
-    @Override
-    public ImmutableList add(Object e) {
-        return null;
+    @org.junit.jupiter.api.Test
+    void testGet() {
+        Object val = 1;
+        assertEquals(lst.get(0), val);
     }
 
-    @Override
-    public ImmutableList add(int index, Object e) {
-        return null;
+    @org.junit.jupiter.api.Test
+    void testRemove() {
+        Object[] arr1 = {1, 1, 1, 1};
+        ImmutableList res = lst.remove(0);
+        assertArrayEquals(res.toArray(), arr1);
     }
 
-    @Override
-    public ImmutableList addAll(Object[] c) {
-        return null;
+
+    @org.junit.jupiter.api.Test
+    void testIndexOf() {
+        assertEquals(lst.indexOf(1), 0);
     }
 
-    @Override
-    public ImmutableList addAll(int index, Object[] c) {
-        return null;
+    @org.junit.jupiter.api.Test
+    void testSize() {
+        assertEquals(lst.size(), 4);
     }
 
-    @Override
-    public Object get(int index) {
-        return null;
+    @org.junit.jupiter.api.Test
+    void testClear() {
+        Object arr[] = new Object[0];
+        assertArrayEquals(lst.clear().toArray(), arr);
     }
 
-    @Override
-    public ImmutableList remove(int index) {
-        return null;
+    @org.junit.jupiter.api.Test
+    void testIsEmpty() {
+        lst = new ImmutableLinkedList();
+        assertEquals(lst.isEmpty(), true);
     }
 
-    @Override
-    public ImmutableList set(int index, Object e) {
-        return null;
+    @org.junit.jupiter.api.Test
+    void testToArray() {
+        Object[] arr = {1, 1, 1, 1};
+        lst = new ImmutableLinkedList(arr);
+        assertArrayEquals(lst.toArray(), arr);
     }
 
-    @Override
-    public int indexOf(Object e) {
-        return 0;
+    @org.junit.jupiter.api.Test
+    void testAddFirst() {
     }
 
-    @Override
-    public int size() {
-        return 0;
+    @org.junit.jupiter.api.Test
+    void testAddLast() {
     }
 
-    @Override
-    public ImmutableList clear() {
-        return null;
+    @org.junit.jupiter.api.Test
+    void getHead() {
     }
 
-    @Override
-    public boolean isEmpty() {
-        return false;
+    @org.junit.jupiter.api.Test
+    void getTail() {
     }
 
-    @Override
-    public Object[] toArray() {
-        return new Object[0];
+    @org.junit.jupiter.api.Test
+    void getFirst() {
     }
 
-    public ImmutableLinkedList addFirst(Object e) {
-        return null;
+    @org.junit.jupiter.api.Test
+    void getLast() {
     }
 
-    public ImmutableLinkedList addLast(Object e) {
-        return null;
+    @org.junit.jupiter.api.Test
+    void removeFirst() {
     }
 
-    public Node getHead() {
-        return null;
-    }
-
-    public Node getTail() {
-        return null;
-    }
-
-    public Object getFirst() {
-        return null;
-    }
-
-    public Object getLast() {
-        return null;
-    }
-
-    public ImmutableLinkedList removeFirst() {
-        return null;
-    }
-
-    public ImmutableLinkedList removeLast() {
-        return null;
+    @org.junit.jupiter.api.Test
+    void removeLast() {
     }
 }
