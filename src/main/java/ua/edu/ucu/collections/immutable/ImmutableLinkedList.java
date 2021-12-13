@@ -1,110 +1,107 @@
 package ua.edu.ucu.collections.immutable;
 
+import java.util.Arrays;
+import java.util.Objects;
 
-import org.junit.Assert;
+public final class ImmutableArrayList implements ImmutableList {
+    private Object[] array;
+    private int size;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class ImmutableLinkedListTest {
-    ImmutableLinkedList lst = new ImmutableLinkedList();
-    Object[] arr = new Object[4];
-
-    @org.junit.jupiter.api.BeforeEach
-    void setUp() {
-        Object[] arr = {1, 1, 1, 1};
-        lst = new ImmutableLinkedList(arr);
+    public ImmutableArrayList(Object[] elements) {
+        this.array = elements.clone();
+        this.size = elements.length;
     }
 
-
-    @org.junit.jupiter.api.Test
-    void testAdd() {
-        Object e = 1;
-        Object[] arr1 = {1, 1, 1, 1, 1};
-        ImmutableList res = lst.add(e);
-        assertArrayEquals(res.toArray(), arr1);
-
+    public ImmutableArrayList() {
+        this.array = new Object[0];
+        this.size = 0;
     }
 
-    @org.junit.jupiter.api.Test
-    void testAddAll() {
-        Object[] e = {1, 1};
-        Object[] arr1 = {1, 1, 1, 1, 1, 1};
-        ImmutableList res = lst.addAll(e);
-        assertArrayEquals(res.toArray(), arr1);
+    @Override
+    public ImmutableList add(Object e) {
+        return add(this.size, e);
     }
 
-    @org.junit.jupiter.api.Test
-    void testGet() {
-        Object val = 1;
-        assertEquals(lst.get(0), val);
+    @Override
+    public ImmutableList add(int index, Object e) {
+        Object[] arr = {e};
+        return addAll(index, arr);
     }
 
-    @org.junit.jupiter.api.Test
-    void testRemove() {
-        Object[] arr1 = {1, 1, 1, 1};
-        ImmutableList res = lst.remove(0);
-        assertArrayEquals(res.toArray(), arr1);
+    @Override
+    public ImmutableList addAll(Object[] c) {
+        return addAll(this.size, c);
     }
 
-
-    @org.junit.jupiter.api.Test
-    void testIndexOf() {
-        assertEquals(lst.indexOf(1), 0);
+    @Override
+    public ImmutableList addAll(int index, Object[] c) {
+        Object[] curr = this.toArray();
+        for (int i = 0; i < c.length; i++) {
+            curr[curr.length + c.length - 1 - i] = curr[curr.length - 1 - i];
+        }
+        for(int i = index; i < c.length + index; i++){
+            curr[i] = c[i - index];
+        }
+        return new ImmutableArrayList(curr);
     }
 
-    @org.junit.jupiter.api.Test
-    void testSize() {
-        assertEquals(lst.size(), 4);
+    @Override
+    public Object get(int index) {
+
+        return this.array[index];
     }
 
-    @org.junit.jupiter.api.Test
-    void testClear() {
-        Object arr[] = new Object[0];
-        assertArrayEquals(lst.clear().toArray(), arr);
+    @Override
+    public ImmutableList remove(int index) {
+        Object[] curr = this.toArray();
+        for (int i = index; i < this.size - 1; i++){
+            curr[i] = curr[i + 1];
+            curr[this.size - 1] = null;
+        }
+        return new ImmutableArrayList(curr);
     }
 
-    @org.junit.jupiter.api.Test
-    void testIsEmpty() {
-        lst = new ImmutableLinkedList();
-        assertEquals(lst.isEmpty(), true);
+    @Override
+    public ImmutableList set(int index, Object e) {
+        Object[] res = this.toArray();
+        res[index] = e;
+
+        return new ImmutableArrayList(res);
     }
 
-    @org.junit.jupiter.api.Test
-    void testToArray() {
-        Object[] arr = {1, 1, 1, 1};
-        lst = new ImmutableLinkedList(arr);
-        assertArrayEquals(lst.toArray(), arr);
+    @Override
+    public int indexOf(Object e) {
+        int index = 0;
+        while (this.array[index] != e) {
+            index++;
+        }
+        return index;
     }
 
-    @org.junit.jupiter.api.Test
-    void testAddFirst() {
+    @Override
+    public int size() {
+        return this.size;
     }
 
-    @org.junit.jupiter.api.Test
-    void testAddLast() {
+    @Override
+    public ImmutableList clear() {
+        return new ImmutableArrayList();
     }
 
-    @org.junit.jupiter.api.Test
-    void getHead() {
+    @Override
+    public boolean isEmpty() {
+        if(this.size == 0){
+            return true;
+        }
+        return false;
     }
 
-    @org.junit.jupiter.api.Test
-    void getTail() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void getFirst() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void getLast() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void removeFirst() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void removeLast() {
+    @Override
+    public Object[] toArray() {
+        Object[] res = new Object[this.size];
+        for (int i = 0; i < this.size; i++) {
+            res[i] = this.array[i];
+        }
+        return res;
     }
 }
